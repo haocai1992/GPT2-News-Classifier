@@ -122,6 +122,7 @@ class SimpleGPT2SequenceClassifier(nn.Module):
 
 # train
 def train(args):
+    # set up GPU training (if using GPU)
     use_cuda = args.num_gpus > 0
     logger.debug("Number of gpus available - {}".format(args.num_gpus))
     kwargs = {"num_workers": 1, "pin_memory": True} if use_cuda else {}
@@ -132,10 +133,12 @@ def train(args):
     if use_cuda:
         torch.cuda.manual_seed(args.seed)
 
+    # load train, validation and test data
     train_loader = _get_train_data_loader(args.batch_size, args.train_dir, **kwargs)
     val_loader = _get_val_data_loader(args.batch_size, args.val_dir, **kwargs)
     test_loader = _get_test_data_loader(args.batch_size, args.test_dir, **kwargs)
 
+    # print logging info
     logger.debug(
         "Processes {}/{} ({:.0f}%) of train data".format(
             len(train_loader.sampler),
@@ -165,13 +168,18 @@ def train(args):
     EPOCHS = args.epochs
     LR = args.lr
 
+    # use cross-entropy as the loss function
     criterion = nn.CrossEntropyLoss()
+
+    # use Adam as the optimizer
     optimizer = Adam(model.parameters(), lr=LR)
 
+    # enable GPU training (if using GPU)
     if use_cuda:
         model = model.cuda()
         criterion = criterion.cuda()
 
+    # training loop
     for epoch_num in range(EPOCHS):
         total_acc_train = 0
         total_loss_train = 0
@@ -197,8 +205,8 @@ def train(args):
         total_acc_val = 0
         total_loss_val = 0
         
+        # validate model on validation data
         with torch.no_grad():
-            
             for val_input, val_label in val_loader:
                 val_label = val_label.to(device)
                 mask = val_input['attention_mask'].to(device)
@@ -218,7 +226,10 @@ def train(args):
             | Val Loss: {total_loss_val / len(val_loader.dataset): .3f} \
             | Val Accuracy: {total_acc_val / len(val_loader.dataset): .3f}")
     
+    # evaluate model performance on unseen data
     test(model, test_loader, device)
+    
+    # save model
     save_model(model, args.model_dir)
 
 # test
