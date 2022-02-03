@@ -3,7 +3,7 @@
 <br>
 <em>Photo by <a href="https://unsplash.com/@impatrickt?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Patrick Tomasso</a> on <a href="https://unsplash.com/s/photos/machine-learning-news?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">Unsplash</a></em></p>
 
-***This repo contains the source code for [my article](https://medium.com/p/612f9957c7b/edit) published on [Towards Data Science](https://towardsdatascience.com/).***
+***This repo contains the source code for [my article](https://towardsdatascience.com/train-and-deploy-fine-tuned-gpt-2-model-using-pytorch-on-amazon-sagemaker-to-classify-news-articles-612f9957c7b) published on [Towards Data Science](https://towardsdatascience.com/).***
 
 # Train and deploy fine-tuned GPT-2 model using PyTorch on Amazon SageMaker to classify news articles
 
