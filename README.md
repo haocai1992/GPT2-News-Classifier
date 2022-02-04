@@ -256,6 +256,16 @@ def train(args):
     save_model(model, args.model_dir)
 ```
 
+One important note: GPT-2 is a text generative model which its last token embedding to predict subsequent tokens. Therefore unlike BERT which uses its first token embedding, in the tokenization step of input text here, we should use the last token as below. ([George Mihaila](https://gmihaila.medium.com/) provided an elegant way of doing this in his article ["GPT2 For Text Classification using Hugging Face Transformers"](https://gmihaila.medium.com/gpt2-for-text-classification-using-hugging-face-transformers-574555451832), which is what I am using here.)
+
+```
+# set up GPT2Tokenizer
+logger.info('Loading GPT2Tokenizer.')
+tokenizer = GPT2Tokenizer.from_pretrained('gpt2')
+tokenizer.padding_side = "left"
+tokenizer.pad_token = tokenizer.eos_token
+```
+
 ## 6. Training in Colab Notebook
 
 When it comes to training Deep Learning models on a cloud notebook, a convenient alternative to Amazon SageMaker is Google's [Colab Notebook](https://colab.research.google.com/?utm_source=scs-index#). It skips all cloud service setup as you need in AWS, and best of all, it offers free CPU/GPU instances for model training (comes with 12 hour limit though)! To use it, simply open your [Google Drive](https://drive.google.com), choose **New->More->Google Colaboratory**. If you want to use GPU to speed up the training, choose **Runtime->Change runtime type->GPU**, and you can write your code there!
@@ -312,6 +322,7 @@ All source code can be found in this Github Repo: [https://github.com/haocai1992
 - **GPT-2 vs BERT**: [https://judithvanstegeren.com/blog/2020/GPT2-and-BERT-a-comparison.html](https://judithvanstegeren.com/blog/2020/GPT2-and-BERT-a-comparison.html)
 - **BBC News Classification dataset**: D. Greene and P. Cunningham. "Practical Solutions to the Problem of Diagonal Dominance in Kernel Document Clustering", Proc. ICML 2006.
 - **GPT-2 for text classification**: [https://github.com/huggingface/transformers/issues/3168](https://github.com/huggingface/transformers/issues/3168)
+- **GPT2 For Text Classification using Hugging Face 🤗 Transformers** (by [George Mihaila](https://gmihaila.medium.com/)): [https://gmihaila.medium.com/gpt2-for-text-classification-using-hugging-face-transformers-574555451832](https://gmihaila.medium.com/gpt2-for-text-classification-using-hugging-face-transformers-574555451832) 
 - **Train and deploy models on AWS SageMaker**: [https://medium.com/@thom.e.lane/streamlit-on-aws-a-fully-featured-solution-for-streamlit-deployments-ba32a81c7460](https://medium.com/@thom.e.lane/streamlit-on-aws-a-fully-featured-solution-for-streamlit-deployments-ba32a81c7460)
 - **Deploy Streamlit app on AWS EC2**: [https://medium.com/usf-msds/deploying-web-app-with-streamlit-docker-and-aws-72b0d4dbcf77](https://medium.com/usf-msds/deploying-web-app-with-streamlit-docker-and-aws-72b0d4dbcf77)
 
